@@ -1,660 +1,366 @@
-<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 에코왕곡 치유농업 제안서</title>
+    <title>2026 에코왕곡 교육 프로그램 제안서</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* 기본 설정 */
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #FDFBF7; color: #333; }
-        h1, h2, h3, h4 { font-family: 'Nanum Myeongjo', serif; }
-        .text-primary-600 { color: #2F855A; }
-        .bg-primary-50 { background-color: #F0FDF4; }
-        .bg-primary-600 { background-color: #2F855A; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
         
-        /* 이미지 영역 스타일 */
-        .img-box {
-            background-color: #EBE3D5;
-            position: relative;
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #fdfbf7; color: #44403c; overflow-x: hidden; }
+        .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
+        .transition-soft { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .animate-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .bg-invoice { background-color: #fff; background-image: radial-gradient(#e7e5e4 1px, transparent 1px); background-size: 20px 20px; }
+        .img-overlay { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 70%); }
+        .step-badge { position: absolute; top: 20px; left: 20px; background: #ea580c; color: white; padding: 8px 16px; border-radius: 12px; font-weight: 900; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .schedule-tab-active { background-color: #4d7c0f; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; }
+        
+        /* 체험명 한 줄 고정 */
+        .single-line-title {
+            white-space: nowrap;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        /* 카드 호버 시 이미지 확대 효과 */
-        .card:hover .img-box img { transform: scale(1.05); }
-
-        /* 모달 스타일 */
-        #modal-overlay {
-            backdrop-filter: blur(5px);
+            text-overflow: ellipsis;
+            font-size: clamp(1.05rem, 2.3vw, 1.35rem);
+            line-height: 1.2;
+            font-weight: 900;
+            display: block;
         }
 
-        /* 인쇄 전용 스타일 */
-        @media print {
-            header, footer, .no-print, #print-btn-float, #modal-overlay { display: none !important; }
-            body { background: white; -webkit-print-color-adjust: exact; }
-            section { page-break-inside: avoid; }
-        }
+        /* 하단 배지 깜빡임 애니메이션 */
+        .dot-blink-blue { animation: blink-blue 1.5s infinite; background-color: #3b82f6; }
+        @keyframes blink-blue { 0%, 100% { opacity: 1; transform: scale(1.1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+        .dot-blink-lime { animation: blink-lime 1.5s infinite; background-color: #84cc16; }
+        @keyframes blink-lime { 0%, 100% { opacity: 1; transform: scale(1.1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+        .dot-blink-orange { animation: blink-orange 1.5s infinite; background-color: #f97316; }
+        @keyframes blink-orange { 0%, 100% { opacity: 1; transform: scale(1.1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+
+        .timeline-item::before { content: ''; position: absolute; left: 19px; top: 40px; bottom: -40px; width: 2px; background: #e5e7eb; }
+        .timeline-item:last-child::before { display: none; }
     </style>
 </head>
-<body>
+<body class="antialiased scroll-smooth text-left">
 
-    <!-- 헤더 -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200 h-20 flex items-center justify-between px-6 max-w-7xl mx-auto w-full">
-        <div class="flex items-center gap-2 text-primary-600 font-bold text-xl">
-            <span>🌿</span> 에코왕곡교육센터
-        </div>
-        <div class="text-sm text-gray-500 font-medium">2026 장애인 맞춤형 치유프로그램</div>
-    </header>
-
-    <!-- 메인 배너 -->
-    <section class="relative h-[600px] flex items-center justify-center text-center px-4 overflow-hidden">
-        <div class="absolute inset-0 z-0 img-box">
-            <!-- [설정] 파일명: main.jpg -->
-            <img src="main.jpg" alt="메인 배너 사진">
-            <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/30 to-white/80"></div>
-        </div>
-        
-        <div class="relative z-10 max-w-4xl mx-auto">
-            <span class="inline-block py-1 px-4 rounded-full bg-white/60 backdrop-blur-sm text-primary-600 text-sm font-bold mb-6 border border-white/50 shadow-sm">
-                2026 SEASON
-            </span>
-            <h2 class="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight drop-shadow-sm" style="text-shadow: 0 2px 10px rgba(255,255,255,0.5);">
-                자연이 건네는 따뜻한 위로
-            </h2>
-            <p class="text-gray-900 text-lg sm:text-2xl font-semibold leading-relaxed bg-white/60 backdrop-blur-md rounded-full px-8 py-3 inline-block shadow-md">
-                흙을 만지고 꽃향기를 맡으며 오감으로 치유하는 특별한 시간
-            </p>
-        </div>
-    </section>
-
-    <!-- 약속 섹션 -->
-    <section class="py-20 max-w-7xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <h3 class="text-3xl font-bold text-gray-800">에코왕곡의 약속</h3>
-            <p class="text-gray-500 mt-2">누구나 편안하게 머물다 가는 공간</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card">
-                <div class="h-48 img-box">
-                    <!-- [설정] 파일명: promise1.jpg -->
-                    <img src="promise1.jpg" alt="약속1 사진">
-                </div>
-                <div class="p-6 text-center">
-                    <h4 class="text-xl font-bold mb-2">턱 없는 평지 정원</h4>
-                    <p class="text-gray-600 text-sm">휠체어도 안전하게 다닐 수 있는<br>무장애 힐링 산책로</p>
-                </div>
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-sm h-16 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                <span class="text-2xl font-bold text-lime-700">🌱</span>
+                <h1 class="font-black text-xl text-stone-900 tracking-tighter">에코왕곡교육센터</h1>
             </div>
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card">
-                <div class="h-48 img-box">
-                    <!-- [설정] 파일명: promise2.jpg -->
-                    <img src="promise2.jpg" alt="약속2 사진">
-                </div>
-                <div class="p-6 text-center">
-                    <h4 class="text-xl font-bold mb-2">오감 치유 활동</h4>
-                    <p class="text-gray-600 text-sm">노동이 아닌 놀이와 쉼,<br>자연과 교감하는 시간</p>
-                </div>
+            <div class="hidden md:flex space-x-8">
+                <button onclick="scrollToId('strengths')" class="text-stone-600 hover:text-lime-700 font-bold text-sm transition-soft">기관강점</button>
+                <button onclick="scrollToId('annual')" class="text-stone-600 hover:text-lime-700 font-bold text-sm transition-soft">연간계획</button>
+                <button onclick="scrollToId('wood-project')" class="text-orange-600 hover:text-orange-700 font-black text-sm transition-soft">시그니처목공</button>
+                <button onclick="scrollToId('schedule')" class="text-stone-600 hover:text-lime-700 font-bold text-sm transition-soft">일정표</button>
+                <button onclick="showModal()" class="bg-lime-900 text-white px-6 py-2 rounded-full font-black text-sm hover:bg-black shadow-md">상담 신청</button>
             </div>
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card">
-                <div class="h-48 img-box">
-                    <!-- [설정] 파일명: promise3.jpg -->
-                    <img src="promise3.jpg" alt="약속3 사진">
-                </div>
-                <div class="p-6 text-center">
-                    <h4 class="text-xl font-bold mb-2">마음을 잇는 선물</h4>
-                    <p class="text-gray-600 text-sm">직접 만든 작품으로<br>성취감과 나눔의 기쁨</p>
-                </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-[85vh] flex items-center justify-center overflow-hidden bg-stone-900 text-center text-white text-balance">
+        <div class="absolute inset-0">
+            <img src="hero.jpg" alt="에코왕곡 메인" class="w-full h-full object-cover opacity-60" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1600&q=80';" />
+        </div>
+        <div class="relative z-10 max-w-5xl mx-auto px-4 animate-in text-center">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-lime-500/20 border border-lime-400 text-lime-300 font-bold text-xs mb-8 tracking-widest uppercase shadow-lg tracking-tighter">🏆 전국 으뜸촌 & 2025 스타마을 선정 기관</div>
+            <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight tracking-tighter italic">자연이 아이들의 <br/> <span class="text-lime-400 font-black tracking-normal font-black">선생님</span>이 됩니다</h1>
+            <p class="text-xl md:text-2xl text-stone-100 mb-12 font-medium leading-relaxed drop-shadow-md">누리과정 연계 프리미엄 생태·환경교육 <br/><span class="font-black text-lime-400 underline decoration-wavy underline-offset-8">10년 이상의 독보적 노하우</span>로 완성된 명품 수업</p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <button onclick="scrollToId('annual')" class="px-10 py-4 bg-lime-600 text-white font-black rounded-2xl shadow-xl hover:bg-lime-700 transition-soft transform hover:-translate-y-1">2026 연간 계획 보기</button>
+                <button onclick="showModal()" class="px-10 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white font-black rounded-2xl hover:bg-white/20 transition-soft">상담 및 예약 신청</button>
             </div>
         </div>
     </section>
 
-    <!-- 힐링 공간 (시설) -->
-    <section class="py-20 bg-primary-600 text-white">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-10">
-            <div class="lg:w-1/3">
-                <h3 class="text-3xl font-bold mb-4">✨ 힐링체험 (선택)</h3>
-                <p class="opacity-90 mb-6 leading-relaxed">
-                    프로그램 전후, 더 깊은 휴식이 필요하다면<br>
-                    <strong>따뜻한 온기</strong>를 채워보세요.<br>
-                    <span class="text-sm mt-2 block opacity-75">※ 유료 체험 / 전문가 지도 하에 안전하게 운영</span>
-                </p>
-                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-white/20 h-48 img-box">
-                    <!-- [설정] 파일명: facility.jpg -->
-                    <img src="facility.jpg" alt="시설 사진">
-                </div>
-            </div>
-            <div class="lg:w-2/3 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="bg-white/10 p-5 rounded-xl text-center border border-white/20">
-                    <div class="text-3xl mb-2">🦶</div>
-                    <div class="font-bold">족욕체험</div>
-                    <div class="text-xs opacity-75">10,000원</div>
-                </div>
-                <div class="bg-white/10 p-5 rounded-xl text-center border border-white/20">
-                    <div class="text-3xl mb-2">🛁</div>
-                    <div class="font-bold">반신욕</div>
-                    <div class="text-xs opacity-75">10,000원</div>
-                </div>
-                <div class="bg-white/10 p-5 rounded-xl text-center border border-white/20 relative">
-                    <div class="absolute top-0 right-0 bg-yellow-400 text-black text-[10px] px-2 font-bold rounded-bl-lg">서비스</div>
-                    <div class="text-3xl mb-2">🌿</div>
-                    <div class="font-bold">정원산책</div>
-                </div>
-                <div class="bg-white/10 p-5 rounded-xl text-center border border-white/20 relative">
-                    <div class="absolute top-0 right-0 bg-yellow-400 text-black text-[10px] px-2 font-bold rounded-bl-lg">서비스</div>
-                    <div class="text-3xl mb-2">📸</div>
-                    <div class="font-bold">인생사진</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
 
-    <!-- 프로그램 섹션 -->
-    <section class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold text-gray-800">사계절 정기 프로그램</h3>
-                <p class="text-gray-500 mt-2">✨ 각 카드를 클릭하면 상세 내용을 볼 수 있습니다. (기본 소요시간: 60분)</p>
+        <!-- 1. 기관 강점 -->
+        <section id="strengths" class="animate-in text-center text-center">
+            <div class="mb-20 text-balance text-center">
+                <h2 class="text-base text-lime-600 font-black tracking-widest uppercase mb-4 text-center">History & Quality</h2>
+                <p class="text-4xl font-black text-stone-900 leading-tight tracking-tighter text-center">에코왕곡교육센터 10년의 신뢰</p>
+                <p class="mt-6 text-stone-500 max-w-2xl mx-auto font-medium text-center">대한민국 농촌 교육의 표준을 제시합니다. 10년간 수많은 교육 기관의 선택을 받아온 전문성을 약속합니다.</p>
             </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- 1월 -->
-                <div onclick="openModal(1)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4 overflow-hidden">
-                        <!-- [설정] 파일명: program_1.jpg -->
-                        <img id="img-1" src="program_1.jpg" alt="1월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">1월: 커피박 키링</h4>
-                            <p class="text-xs text-gray-500">커피 찌꺼기의 재탄생</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-10 rounded-[48px] bg-white border border-stone-100 card-shadow transition-soft hover:-translate-y-2 text-center text-center">
+                    <div class="text-5xl mb-6 text-center">🏅</div>
+                    <h3 class="font-black text-xl text-stone-900 mb-4 tracking-tight font-black text-lime-800 text-center">국가인증 1등급 기관</h3>
+                    <p class="text-stone-500 text-sm leading-relaxed font-bold text-center">농식품부 '으뜸촌' 및 교육부 인증기관. 국가가 보증하는 안전과 품질을 약속합니다.</p>
                 </div>
-                <!-- 2월 -->
-                <div onclick="openModal(2)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_2.jpg -->
-                        <img id="img-2" src="program_2.jpg" alt="2월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">2월: 복(福) 주머니</h4>
-                            <p class="text-xs text-gray-500">건강 기원 견과류 담기</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
+                <div class="p-10 rounded-[48px] bg-white border border-stone-100 card-shadow transition-soft hover:-translate-y-2 text-center text-center">
+                    <div class="text-5xl mb-6 text-center">📚</div>
+                    <h3 class="font-black text-xl text-stone-900 mb-4 tracking-tight font-black text-lime-800 text-center">누리과정 밀착 설계</h3>
+                    <p class="text-stone-500 text-sm leading-relaxed font-bold text-center">월별 생활주제와 아이들의 발달 단계에 최적화된 [체험+놀이+이야기] 커리큘럼을 제공합니다.</p>
                 </div>
-                <!-- 3월 -->
-                <div onclick="openModal(3)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_3.jpg -->
-                        <img id="img-3" src="program_3.jpg" alt="3월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">3월: 반려식물 입양</h4>
-                            <p class="text-xs text-gray-500">봄꽃 심기와 이름 짓기</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 4월 -->
-                <div onclick="openModal(4)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_4.jpg -->
-                        <img id="img-4" src="program_4.jpg" alt="4월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">4월: 봄 꽃떡 빚기</h4>
-                            <p class="text-xs text-gray-500">알록달록 천연 쌀반죽</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 5월 -->
-                <div onclick="openModal(5)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_5.jpg -->
-                        <img id="img-5" src="program_5.jpg" alt="5월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">5월: 감사 바구니</h4>
-                            <p class="text-xs text-gray-500">비누꽃과 허브 향기</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 6월 -->
-                <div onclick="openModal(6)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_6.jpg -->
-                        <img id="img-6" src="program_6.jpg" alt="6월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">6월: 이끼 테라리움</h4>
-                            <p class="text-xs text-gray-500">유리병 속 작은 숲</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 7월 -->
-                <div onclick="openModal(7)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_7.jpg -->
-                        <img id="img-7" src="program_7.jpg" alt="7월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">7월: 양파껍질 염색</h4>
-                            <p class="text-xs text-gray-500">황금빛 자연의 색</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 8월 -->
-                <div onclick="openModal(8)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_8.jpg -->
-                        <img id="img-8" src="program_8.jpg" alt="8월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">8월: 과일 컵빙수</h4>
-                            <p class="text-xs text-gray-500">시원한 여름나기</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 9월 -->
-                <div onclick="openModal(9)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_9.jpg -->
-                        <img id="img-9" src="program_9.jpg" alt="9월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">9월: 압화 무드등</h4>
-                            <p class="text-xs text-gray-500">가을 꽃잎을 담은 빛</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 10월 -->
-                <div onclick="openModal(10)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_10.jpg -->
-                        <img id="img-10" src="program_10.jpg" alt="10월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">10월: 우드 트레이</h4>
-                            <p class="text-xs text-gray-500">사포질과 오일 마감</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 11월 -->
-                <div onclick="openModal(11)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_11.jpg -->
-                        <img id="img-11" src="program_11.jpg" alt="11월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">11월: 가래떡 빼빼로</h4>
-                            <p class="text-xs text-gray-500">우리 쌀로 만드는 간식</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
-                </div>
-                <!-- 12월 -->
-                <div onclick="openModal(12)" class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all cursor-pointer hover:scale-105 border border-transparent hover:border-primary-600 group">
-                    <div class="h-40 rounded-xl img-box mb-4">
-                        <!-- [설정] 파일명: program_12.jpg -->
-                        <img id="img-12" src="program_12.jpg" alt="12월 프로그램">
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-lg font-bold group-hover:text-primary-600 transition-colors">12월: 트리 케이크</h4>
-                            <p class="text-xs text-gray-500">달콤한 연말 파티</p>
-                        </div>
-                        <span class="text-gray-300 text-xl group-hover:text-primary-600">➔</span>
-                    </div>
+                <div class="p-10 rounded-[48px] bg-white border border-stone-100 card-shadow transition-soft hover:-translate-y-2 text-center text-center">
+                    <div class="text-5xl mb-6 text-center">👨‍🏫</div>
+                    <h3 class="font-black text-xl text-stone-900 mb-4 tracking-tight font-black text-lime-800 text-center">전문 강사 직접 지도</h3>
+                    <p class="text-stone-500 text-sm leading-relaxed font-bold text-center text-center">자격증을 보유한 목공 전문 강사진이 교실로 찾아갑니다. 아이들의 안전과 성장을 책임집니다.</p>
                 </div>
             </div>
-            <p class="text-center text-gray-400 text-sm mt-8">※ 상기 프로그램은 마을 사정 및 날씨에 따라 변경될 수 있습니다.</p>
-        </div>
-    </section>
+        </section>
 
-    <!-- 특별한 하루 (Special Day) -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold text-gray-800">특별한 하루 (Special Day)</h3>
-                <p class="text-gray-500 mt-2">✨ 카드를 클릭하면 상세 진행 과정을 볼 수 있습니다.</p>
+        <!-- 2. 연간 계획 -->
+        <section id="annual">
+            <div class="mb-20 text-left text-left">
+                <h2 class="text-base text-lime-600 font-black tracking-widest uppercase mb-4 text-left">Educational Roadmap</h2>
+                <p class="text-4xl font-black text-stone-900 italic font-serif leading-tight tracking-tighter text-left">2026학년도 연간 교육 계획</p>
+                <div class="flex flex-wrap gap-2 mt-10 p-1 bg-stone-100 rounded-2xl border border-stone-200 inline-flex shadow-inner font-bold text-left text-xs md:text-sm">
+                    <button onclick="updateFilter('all')" id="f-all" class="px-5 py-2 rounded-xl text-xs font-black transition-soft bg-white shadow-sm text-lime-800">전체</button>
+                    <button onclick="updateFilter('spring')" id="f-spring" class="px-5 py-2 rounded-xl transition-soft text-stone-500 hover:bg-white/50 font-bold">봄</button>
+                    <button onclick="updateFilter('summer')" id="f-summer" class="px-5 py-2 rounded-xl transition-soft text-stone-500 hover:bg-white/50 font-bold">여름</button>
+                    <button onclick="updateFilter('autumn')" id="f-autumn" class="px-5 py-2 rounded-xl transition-soft text-stone-500 hover:bg-white/50 font-bold">가을</button>
+                    <button onclick="updateFilter('winter')" id="f-winter" class="px-5 py-2 rounded-xl transition-soft text-stone-500 hover:bg-white/50 font-bold">겨울</button>
+                </div>
+                <p class="mt-6 text-stone-400 text-xs font-bold flex items-center gap-1 italic"><span class="text-orange-600 font-black mr-1">※</span> 본 이미지는 예시이며, 실제 활동 및 완성품은 교육 여건에 따라 변경될 수 있습니다.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- 소풍 카드 (S1) -->
-                <div onclick="openModal('S1')" class="bg-gray-50 rounded-3xl overflow-hidden shadow-sm flex flex-col md:flex-row card group h-full cursor-pointer hover:shadow-xl hover:scale-[1.01] transition-all">
-                    <div class="w-full md:w-2/5 h-64 md:h-auto img-box relative">
-                        <!-- [설정] 파일명: outing.jpg -->
-                        <img id="img-S1" src="outing.jpg" alt="소풍 사진">
+            <div id="curriculum-grid" class="grid grid-cols-1 md:grid-cols-2 gap-10 text-left"></div>
+        </section>
+
+        <!-- 3. 시그니처 목공 -->
+        <section id="wood-project" class="bg-stone-900 rounded-[80px] p-12 md:p-24 overflow-hidden relative">
+            <div class="absolute right-0 top-0 w-1/3 h-full bg-orange-600/5 pointer-events-none"></div>
+            <div class="relative z-10 text-center text-white">
+                <span class="text-orange-400 font-black tracking-widest uppercase text-xs mb-4 block text-center">Premium Woodcraft Project</span>
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter italic font-serif text-center text-center">"나무와 친해지기 3.0"</h2>
+                <p class="text-lg text-stone-400 max-w-3xl mx-auto font-medium leading-relaxed italic mb-10 text-center text-balance text-center">"10년 이상 현장에서 검증된 국내 유일의 3차시 연속성 목공 프로젝트입니다."</p>
+                <p class="mb-20 text-stone-500 text-[11px] font-bold text-center text-center">※ 목공 완성품은 연령 및 원의 상황에 따라 디자인이 세련되게 변경될 수 있습니다.</p>
+
+                <div class="grid lg:grid-cols-3 gap-10 text-left">
+                    <div class="bg-white/5 backdrop-blur-md rounded-[56px] overflow-hidden border border-white/10 hover:border-orange-500/50 transition-soft flex flex-col h-full shadow-lg group text-left">
+                        <div class="h-64 relative text-left">
+                            <span class="step-badge">1차</span>
+                            <img src="wood1.jpg" class="w-full h-full object-cover transition-soft group-hover:scale-110" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=800&q=80';" />
+                            <div class="absolute inset-0 img-overlay flex items-end p-8 text-left text-left"><h3 class="text-white text-2xl font-black text-left">도구의 발견</h3></div>
+                        </div>
+                        <div class="p-10 flex-grow text-left">
+                            <h4 class="text-[11px] font-black text-orange-400 uppercase tracking-widest mb-3 text-left">Discovery</h4>
+                            <p class="text-sm text-stone-400 leading-relaxed font-medium text-left">나무와 나무못을 자유롭게 두드리며 성질을 익히고 정서적 해소감을 얻는 기초 단계입니다.</p>
+                            <p class="text-xs text-lime-400 mt-2 font-bold italic text-left">* 동물 못박기 세트 1인 1개 제공</p>
+                        </div>
                     </div>
-                    <div class="p-8 md:w-3/5 flex flex-col justify-center">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary-600 transition-colors">에코 정원 소풍</h4>
-                            <span class="text-gray-300 text-2xl group-hover:text-primary-600">➔</span>
+                    <div class="bg-white/5 backdrop-blur-md rounded-[56px] overflow-hidden border border-white/10 hover:border-orange-500/50 transition-soft flex flex-col h-full shadow-lg group border-2 border-lime-500/30 text-left text-left">
+                        <div class="h-64 relative text-left text-left">
+                            <span class="step-badge">2차</span>
+                            <img src="wood2.jpg" class="w-full h-full object-cover transition-soft group-hover:scale-110" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80';" />
+                            <div class="absolute inset-0 img-overlay flex items-end p-8 text-left text-left text-left text-left"><h3 class="text-white text-2xl font-black text-left text-left text-left">기술의 완성</h3></div>
                         </div>
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">소요시간 3시간</span>
-                            <p class="text-gray-600 text-sm">탁 트인 1,000평 정원에서 즐기는 소풍</p>
+                        <div class="p-10 flex-grow text-left text-left text-left">
+                            <h4 class="text-[11px] font-black text-orange-400 uppercase tracking-widest mb-3 text-left">Structure</h4>
+                            <div class="flex flex-wrap gap-2 mb-4 text-left">
+                                <span class="bg-lime-600/20 text-lime-400 text-[10px] px-2 py-0.5 rounded border border-lime-500/30 font-black">자동차</span>
+                                <span class="bg-lime-600/20 text-lime-400 text-[10px] px-2 py-0.5 rounded border border-lime-500/30 font-black">새싹화분</span>
+                                <span class="bg-lime-600/20 text-lime-400 text-[10px] px-2 py-0.5 rounded border border-lime-500/30 font-black">캐릭터연필꽂이</span>
+                            </div>
+                            <p class="text-sm text-stone-400 leading-relaxed font-medium text-left">1차 지식을 바탕으로 드라이버와 망치를 활용해 실제 기능을 가진 작품을 완성합니다.</p>
                         </div>
-                        <ul class="text-sm space-y-2 text-gray-500">
-                            <li>✔️ 정원 산책 및 미션 활동</li>
-                            <li>✔️ <strong>카페 정원 브런치 뷔페</strong> (1인 16,800원)</li>
-                            <li>✔️ 계절 꽃 화분 심기</li>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-md rounded-[56px] overflow-hidden border border-white/10 hover:border-orange-500/50 transition-soft flex flex-col h-full shadow-lg group text-left text-left text-left">
+                        <div class="h-64 relative text-left text-left text-left text-left">
+                            <span class="step-badge bg-lime-600">3차</span>
+                            <img src="wood3.jpg" class="w-full h-full object-cover transition-soft group-hover:scale-110" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1601628122822-4876b539401b?auto=format&fit=crop&w=800&q=80';" />
+                            <div class="absolute inset-0 img-overlay flex items-end p-8 text-left text-left text-left text-left text-left"><h3 class="text-white text-2xl font-black text-left text-left text-left text-left">이야기의 확장</h3></div>
+                        </div>
+                        <div class="p-10 flex-grow text-left text-left text-left text-left">
+                            <h4 class="text-[11px] font-black text-orange-400 uppercase tracking-widest mb-3 text-left">Storytelling</h4>
+                            <p class="text-sm text-stone-400 leading-relaxed font-medium text-left">나만의 마을을 구성하고 목공 인형을 통해 따뜻한 이야기를 완성하는 하이라이트 단계입니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 bg-gradient-to-r from-orange-600 to-orange-700 rounded-[64px] p-12 flex flex-col md:flex-row items-center justify-between gap-12 text-left shadow-2xl border border-orange-500/20 text-left">
+                    <div class="max-w-xl text-left">
+                        <h4 class="text-3xl font-black text-white mb-6 font-serif italic text-left">준비물 걱정 없는 '출장 안심' 시스템</h4>
+                        <ul class="grid sm:grid-cols-2 gap-4 text-orange-50 font-bold text-sm text-left">
+                            <li class="flex items-center gap-2">✅ 재료 세팅부터 뒷정리까지 완벽 책임</li>
+                            <li class="flex items-center gap-2 text-left">✅ 전문 목공 강사 직접 지도 (자격 보유)</li>
+                            <li class="flex items-center gap-2 text-left text-left">✅ 연령별 발달 단계 맞춤형 교구 제공</li>
+                            <li class="flex items-center gap-2 text-left text-left">✅ 저소음 작업 패드 사용 (층간소음 방지)</li>
                         </ul>
                     </div>
+                    <button onclick="showModal()" class="bg-white text-orange-600 px-14 py-7 rounded-3xl font-black text-xl shadow-2xl hover:bg-orange-50 transition transform hover:scale-105 active:scale-95 text-center font-black uppercase">상담 신청하기</button>
                 </div>
+            </div>
+        </section>
 
-                <!-- 프리미엄 힐링 소풍 카드 (S2) -->
-                <div onclick="openModal('S2')" class="bg-gray-50 rounded-3xl overflow-hidden shadow-sm flex flex-col md:flex-row card group h-full cursor-pointer hover:shadow-xl hover:scale-[1.01] transition-all">
-                    <div class="w-full md:w-2/5 h-64 md:h-auto img-box relative">
-                        <!-- [설정] 파일명: workshop.jpg -->
-                        <img id="img-S2" src="workshop.jpg" alt="힐링 소풍 사진">
+        <!-- 4. 특별 행사 및 일정표 -->
+        <section id="schedule" class="animate-in text-center text-center text-center">
+            <div class="mb-20">
+                <h2 class="text-base text-orange-600 font-black tracking-widest uppercase mb-4 text-center">Seasonal Special</h2>
+                <p class="text-4xl font-black text-stone-900 leading-tight tracking-tighter text-center text-center text-center">함께 웃고 추억하는 특별 행사</p>
+                <p class="mt-6 text-stone-500 max-w-2xl mx-auto font-medium text-center">에코왕곡의 특별 행사는 단순한 대관이 아닙니다. 대표님의 직접 진행과 10년의 노하우가 결합된 '올인원 패키지'입니다.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-24 text-left text-left">
+                <div class="bg-white rounded-[48px] overflow-hidden border border-stone-200 shadow-sm flex flex-col transition-soft hover:shadow-2xl text-left">
+                    <div class="h-64 relative bg-lime-900 overflow-hidden text-center text-center">
+                        <img src="sports.jpg.png" class="w-full h-full object-cover opacity-60 text-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1530143311094-34d807799e8f?auto=format&fit=crop&w=600&q=80';" />
+                        <div class="absolute inset-0 flex items-center justify-center text-center text-center text-center"><h3 class="text-white text-3xl font-black drop-shadow-md text-center text-center text-center">🚩 명랑 운동회</h3></div>
                     </div>
-                    <div class="p-8 md:w-3/5 flex flex-col justify-center">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">프리미엄 힐링 소풍</h4>
-                            <span class="text-gray-300 text-2xl group-hover:text-purple-600">➔</span>
-                        </div>
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">소요시간 3.5시간</span>
-                            <p class="text-gray-600 text-sm">우아한 티타임과 아로마 힐링</p>
-                        </div>
-                        <ul class="text-sm space-y-2 text-gray-500">
-                            <li>✔️ <strong>카페 정원 브런치 뷔페 포함</strong></li>
-                            <li>✔️ <strong>프리미엄 티테라피 & 아로마 오일 핸드케어</strong></li>
-                            <li>✔️ 향기 사쉐(방향제) 만들기</li>
+                    <div class="p-10 space-y-6 text-left">
+                        <ul class="space-y-4 text-stone-600 font-bold text-left text-left">
+                            <li class="flex gap-3 text-left">✅ <span class="text-lime-700 font-black text-left">대표님 직접 진행 (MC비 무료 혜택)</span></li>
+                            <li class="flex gap-3 text-left text-left">✅ 대형 천연 잔디 마당 원 단독 사용</li>
+                            <li class="flex gap-3 text-left text-left text-left text-left">✅ 음향 장비 및 행사 물품 일체 지원</li>
                         </ul>
+                        <button onclick="switchSchedule('sports'); scrollToId('sched-view');" class="w-full py-4 bg-lime-600 text-white font-black rounded-2xl transition hover:bg-lime-700 text-center font-black uppercase shadow-lg text-center text-center">운동회 일정표 보기</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[48px] overflow-hidden border border-stone-200 shadow-sm flex flex-col transition-soft hover:shadow-2xl text-left text-left">
+                    <div class="h-64 relative bg-stone-800 overflow-hidden text-center text-center text-center text-center text-center">
+                        <img src="camp.jpg.png" class="w-full h-full object-cover opacity-60 text-center text-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=600&q=80';" />
+                        <div class="absolute inset-0 flex items-center justify-center text-center text-center text-center text-center text-center text-center text-center"><h3 class="text-white text-3xl font-black drop-shadow-md text-center text-center text-center text-center text-center">⛺ 졸업 여행</h3></div>
+                    </div>
+                    <div class="p-10 space-y-6 text-left text-left">
+                        <ul class="space-y-4 text-stone-600 font-bold text-left text-left">
+                            <li class="flex gap-3 text-left text-left">✅ 1박 2일 따뜻한 온돌 숙박 보장</li>
+                            <li class="flex gap-3 text-left text-left">✅ <span class="text-orange-600 font-black text-left">LED 불멍 & 촛불의식 무료 진행</span></li>
+                            <li class="flex gap-3 text-left text-left text-left text-left">✅ 저녁(BBQ)+아침+점심 3식 풀패키지</li>
+                        </ul>
+                        <button onclick="switchSchedule('grad'); scrollToId('sched-view');" class="w-full py-4 bg-orange-600 text-white font-black rounded-2xl transition hover:bg-orange-700 text-center font-black uppercase shadow-lg text-center text-center">졸업여행 일정표 보기</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- 식사 & 카페 유도 섹션 -->
-    <section class="py-20 bg-amber-50 relative overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-        <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2 text-left">
-                    <span class="text-amber-600 font-bold tracking-wider text-sm mb-2 block">LUNCH & CAFE</span>
-                    <h3 class="text-4xl font-bold text-gray-800 mb-6 leading-tight">
-                        점심 걱정 없이<br>
-                        <span class="text-primary-600">맛있는 쉼표</span>를 즐기세요
-                    </h3>
-                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                        프로그램이 끝나면 배고픈 참가자들을 위해<br>
-                        <strong>'카페 정원'</strong>에서 따뜻한 식사를 준비해 드립니다.<br>
-                        <br>
-                        통유리창 너머로 정원을 바라보며 즐기는<br>
-                        건강한 <strong>로컬푸드 뷔페</strong>와 향긋한 <strong>커피 한 잔.</strong><br>
-                        선생님도, 참가자도 가장 만족하는 시간입니다.
-                    </p>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center gap-3 text-gray-700">
-                            <span class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✔</span>
-                            나주 로컬 식재료로 만든 건강 뷔페
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-700">
-                            <span class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✔</span>
-                            휠체어 진입이 가능한 넓은 테이블 간격
-                        </li>
-                        <li class="flex items-center gap-3 text-gray-700">
-                            <span class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✔</span>
-                            식사 후 카페 음료 할인 혜택 제공
-                        </li>
-                    </ul>
+            <!-- 타임라인 일정표 -->
+            <div id="sched-view" class="pt-20 text-center text-center">
+                <div class="flex justify-center gap-3 mb-16 overflow-x-auto pb-4 text-center">
+                    <button onclick="switchSchedule('basic')" id="s-btn-basic" class="schedule-tab-active px-8 py-3 rounded-full text-sm font-black transition-soft text-center font-black">일반 체험</button>
+                    <button onclick="switchSchedule('sports')" id="s-btn-sports" class="bg-stone-100 text-stone-500 px-8 py-3 rounded-full text-sm font-black hover:bg-stone-200 transition-soft font-bold text-center">명랑 운동회</button>
+                    <button onclick="switchSchedule('grad')" id="s-btn-grad" class="bg-stone-100 text-stone-500 px-8 py-3 rounded-full text-sm font-black hover:bg-stone-200 transition-soft font-bold text-center">졸업 여행</button>
                 </div>
-                <div class="lg:w-1/2">
-                    <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500 h-80 img-box">
-                        <!-- [설정] 파일명: cafe_meal.jpg -->
-                        <img src="cafe_meal.jpg" alt="식사 사진">
-                    </div>
+                <div class="max-w-2xl mx-auto text-left relative pl-12 mb-32 text-left">
+                    <div id="schedule-content" class="space-y-12 text-left text-left"></div>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- 예산 계산기 -->
-    <section id="calculator" class="py-20 bg-primary-600 text-white no-print">
-        <div class="max-w-4xl mx-auto px-6">
-            <h3 class="text-3xl font-bold text-center mb-10">맞춤 예산 계산기</h3>
-            
-            <div class="bg-white rounded-3xl p-8 text-gray-800 shadow-xl">
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-start gap-3">
-                    <span class="text-2xl">💡</span>
-                    <div>
-                        <h5 class="font-bold text-gray-800 text-sm mb-1">예산 맞춤 가능!</h5>
-                        <p class="text-xs text-gray-600">
-                            정해진 예산 때문에 고민하지 마세요. 체험 내용을 조정하여 <strong>원하시는 단가</strong>로 맞춤 기획이 가능합니다.
-                        </p>
-                    </div>
+        </section>
+
+        <!-- 5. 견적 계산기 (오각형 삭제 및 중앙 배치) -->
+        <section id="calculator" class="pt-32 border-t border-stone-200 text-center text-center text-center">
+            <div class="max-w-3xl mx-auto text-center">
+                <div class="mb-16">
+                    <span class="inline-block bg-lime-100 text-lime-700 px-4 py-1 rounded-full text-xs font-black uppercase mb-4 tracking-widest font-black">Nuri-Curriculum Alignment 98%</span>
+                    <h2 class="text-4xl font-black text-stone-900 leading-tight tracking-tighter text-center">스마트 맞춤 견적 산출</h2>
+                    <p class="mt-6 text-stone-500 font-medium text-center">누리과정 5대 영역을 골고루 담은 에코왕곡의 교육 가치입니다.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <label class="block font-bold mb-2">참여 인원</label>
-                        <input type="number" id="headcount" value="20" min="15" class="w-full border p-3 rounded-lg bg-gray-50 font-bold mb-1">
-                        <p class="text-xs text-gray-400">* 최소 15명 / 인솔자 비용 별도 협의</p>
-                        
-                        <label class="block font-bold mt-6 mb-2">코스 선택</label>
-                        <div class="space-y-3">
-                            <!-- A 코스 -->
-                            <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors h-16">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="course" value="A" checked class="w-4 h-4 text-primary-600 focus:ring-primary-600 border-gray-300">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-sm">A. 기본 체험형 (60분)</span>
-                                        <span class="text-xs text-gray-500">가볍게 즐기는 알뜰 실속 코스</span>
-                                    </div>
-                                </div>
-                                <span class="text-primary-600 font-bold text-sm whitespace-nowrap">25,000원</span>
-                            </label>
-
-                            <!-- B 코스 -->
-                            <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors h-16">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="course" value="B" class="w-4 h-4 text-amber-600 focus:ring-amber-600 border-gray-300">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-sm">B. 에코 정원 소풍 (3시간)</span>
-                                        <span class="text-xs text-amber-600">든든한 식사와 여유로운 정원 산책</span>
-                                    </div>
-                                </div>
-                                <span class="text-amber-600 font-bold text-sm whitespace-nowrap">40,000원</span>
-                            </label>
-
-                            <!-- C 코스 -->
-                            <label class="flex items-center justify-between p-3 border-2 border-purple-100 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors h-16">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="course" value="C" class="w-4 h-4 text-purple-600 focus:ring-purple-600 border-gray-300">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-sm">C. 프리미엄 힐링 소풍 (3.5시간)</span>
-                                        <span class="text-xs text-purple-700">추천! 식사 + 티테라피 + 아로마 풀코스</span>
-                                    </div>
-                                </div>
-                                <span class="text-purple-600 font-bold text-sm whitespace-nowrap">50,000원</span>
-                            </label>
+                <div class="bg-white bg-invoice p-12 md:p-16 rounded-[64px] border border-stone-300 card-shadow flex flex-col text-left text-left">
+                    <div class="flex justify-between items-center mb-12 pb-8 border-b-2 border-dashed border-stone-300 text-left text-left">
+                        <div class="text-left text-left"><span class="bg-stone-800 text-white text-[10px] px-2 py-1 rounded font-black tracking-widest uppercase text-left">Estimator</span><h2 class="text-3xl font-black mt-3 text-stone-800 tracking-tighter text-left">견적 미리보기</h2></div>
+                        <div class="text-right text-right"><div id="total-price" class="text-5xl font-black text-lime-700 tracking-tighter italic text-right font-black">0원</div><p class="text-stone-400 text-[10px] uppercase mt-1 tracking-widest text-right font-black font-black">VAT Not Included</p></div>
+                    </div>
+                    <div class="space-y-10 text-left text-left">
+                        <div class="text-left text-left text-left text-left">
+                            <label class="block text-[11px] font-black text-stone-400 mb-4 tracking-widest uppercase text-left">Attendance Count</label>
+                            <input type="number" id="in-child" value="25" class="w-full px-8 py-5 rounded-[32px] border-2 border-stone-50 bg-stone-50 focus:bg-white focus:border-lime-500 outline-none text-4xl font-black transition-soft text-left font-black" />
                         </div>
-                    </div>
-                    
-                    <div class="bg-gray-100 rounded-xl p-6 flex flex-col justify-center text-right">
-                        <div class="mb-4">
-                            <span class="block text-gray-500 text-sm">1회 총 견적</span>
-                            <span id="total-cost" class="text-3xl font-bold text-gray-900">0 원</span>
+                        <div class="flex items-center justify-between p-8 bg-stone-50 rounded-[40px] border border-stone-100 text-left text-left text-left">
+                            <div class="text-left text-left text-left">
+                                <span class="block text-lg font-black text-stone-800 tracking-tight text-left font-black text-left">나주 로컬 점심 식단</span>
+                                <span class="text-[13px] text-stone-400 font-bold italic block mt-1 leading-none text-left font-black">친환경 건강 식단 (1인 8,000원 추가)</span>
+                            </div>
+                            <input type="checkbox" id="in-meal" class="w-12 h-12 text-lime-600 rounded-3xl focus:ring-lime-500 cursor-pointer accent-lime-600 shadow-sm text-left" />
                         </div>
-                        <div class="pt-4 border-t border-gray-300">
-                            <span class="block text-gray-500 text-sm">연간(12회) 견적</span>
-                            <span id="annual-cost" class="text-xl font-bold text-primary-600">0 원</span>
-                        </div>
-                        <p id="special-note" class="hidden text-center text-purple-600 font-bold text-sm mt-4">✨ 특별한 하루를 위한 맞춤 견적</p>
-                        <p class="text-xs text-gray-400 mt-2">* 부가세 별도</p>
+                        <button onclick="showModal()" class="w-full py-7 bg-stone-900 text-white font-black rounded-[40px] hover:bg-black transition transform hover:scale-105 shadow-2xl text-2xl tracking-tight uppercase text-center font-black font-black">상담 신청 및 예약하기</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- 하단 푸터 -->
-    <footer class="bg-gray-800 text-white pt-16 pb-12 no-print">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            
-            <!-- 환영 메시지 -->
-            <div class="mb-12 bg-gray-700/30 rounded-2xl p-8 border border-gray-600/30 backdrop-blur-sm relative overflow-hidden group hover:bg-gray-700/50 transition-colors">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
-                <h4 class="text-xl font-bold mb-4 text-green-400 font-serif">"따뜻한 차 한 잔과 함께 기다리겠습니다"</h4>
-                <p class="text-gray-300 text-base leading-relaxed">
-                    에코왕곡의 문은 언제나 활짝 열려있습니다.<br>
-                    현장이 궁금하시다면 부담 없이 <span class="font-bold text-white border-b border-green-500/50 cursor-pointer hover:text-green-300">사전 답사(Fam Tour)</span>를 신청해 주세요.<br>
-                    마을의 흙내음과 이야기를 천천히 소개해 드리고 싶습니다.
-                </p>
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-500 py-24 border-t border-white/5 text-center font-bold text-center text-center">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black text-white mb-10 tracking-tighter uppercase tracking-[0.2em] text-center">에코왕곡교육센터</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-12 text-sm mb-20 tracking-[0.1em] text-center text-center text-center">
+                <span class="flex items-center gap-3 text-center text-center text-center"><span class="w-2.5 h-2.5 bg-lime-500 rounded-full dot-blink-lime text-center font-black"></span> 전국 으뜸촌 지정</span>
+                <span class="flex items-center gap-3 text-center text-center text-center text-center"><span class="w-2.5 h-2.5 bg-orange-500 rounded-full dot-blink-orange text-center font-black"></span> 전남 2025 스타마을</span>
+                <span class="flex items-center gap-3 text-center text-center text-center text-center text-center text-center text-center text-center"><span class="w-2.5 h-2.5 bg-blue-500 rounded-full dot-blink-blue text-center font-black"></span> 교육부 인증기관</span>
             </div>
-
-            <!-- 기관 정보 -->
-            <div class="space-y-3 text-gray-400 text-sm border-t border-gray-700 pt-8">
-                <p class="font-bold text-xl text-white mb-2">에코왕곡 체험휴양마을 / 작은도서관 / 마을학교 / 인성학교</p>
-                <div class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 leading-relaxed">
-                    <span>(58296) 전라남도 나주시 왕곡면 나주서부로 371-14</span>
-                    <span class="hidden md:inline text-gray-600">|</span>
-                    <span>대표전화 : 061-335-8101</span>
-                </div>
-                <div class="flex flex-col md:flex-row justify-center gap-2 md:gap-6 mt-4">
-                    <a href="http://www.ecowanggok.com" target="_blank" class="hover:text-white hover:underline transition-colors">홈페이지: www.ecowanggok.com</a>
-                    <span class="hidden md:inline text-gray-600">|</span>
-                    <a href="https://blog.naver.com/emdeo4200" target="_blank" class="hover:text-white hover:underline transition-colors">블로그: blog.naver.com/emdeo4200</a>
-                </div>
-                <p class="text-gray-600 text-xs mt-8">© 2026 EcoWanggok Village. All rights reserved.</p>
-            </div>
-
+            <p class="text-sm opacity-70 mb-4 text-center font-black">전라남도 나주시 왕곡면 나주서부로 371-14 | 061-335-8101</p>
+            <p class="text-lg font-black text-stone-200 italic text-center font-black">📞 사무장 박선율 010-8680-8101</p>
+            <p class="text-[10px] mt-16 tracking-widest text-stone-700 uppercase font-black text-center text-center text-center">Copyright © 2026 Eco Wanggok. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- 플로팅 버튼 -->
-    <div id="print-btn-float" onclick="window.print()" class="fixed bottom-8 right-8 bg-gray-900 text-white px-6 py-4 rounded-full shadow-xl cursor-pointer hover:scale-105 transition-transform flex items-center gap-2 font-bold z-50">
-        🖨️ 인쇄 / PDF 저장
-    </div>
-
-    <!-- 상세 내용 모달 -->
-    <div id="modal-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fade-in-up">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold p-2 z-10">&times;</button>
-            <div class="h-48 bg-gray-200 img-box">
-                <img id="modal-img" src="" alt="상세이미지">
+    <!-- 상담 신청 모달 -->
+    <div id="reservation-modal" class="modal-overlay" onclick="closeModal()">
+        <div class="bg-white rounded-[48px] max-w-lg w-full p-10 card-shadow border border-stone-200 animate-in text-center shadow-2xl" onclick="event.stopPropagation()">
+            <div class="text-5xl mb-6 text-center text-center text-center">📬</div>
+            <h2 class="text-3xl font-black text-lime-800 mb-2 font-black tracking-tight text-center">상담 및 예약 신청</h2>
+            <p class="text-stone-500 font-bold mb-10 text-center font-bold">10년의 신뢰로 정성껏 안내해 드립니다.</p>
+            <div class="space-y-4 mb-12 text-left">
+                <div class="bg-stone-50 p-6 rounded-3xl border flex items-center gap-4 text-left"><span class="text-2xl text-center">👤</span><div><p class="text-xs text-stone-400 font-black uppercase tracking-widest font-black text-left">상담 담당자</p><p class="text-xl font-black text-stone-800 font-black tracking-tight text-left">박선율 사무장</p></div></div>
+                <div class="bg-lime-50 p-6 rounded-3xl border flex items-center gap-4 text-left text-left text-left"><span class="text-2xl text-center text-center">📞</span><div><p class="text-xs text-lime-600 font-black uppercase tracking-widest font-black text-left">직통 번호</p><p class="text-xl font-black text-lime-900 font-black tracking-tight text-left text-left">010-8680-8101</p></div></div>
             </div>
-            <div class="p-8">
-                <span id="modal-tag" class="inline-block py-1 px-3 rounded-full bg-green-100 text-green-700 text-xs font-bold mb-4">체험활동</span>
-                <h3 id="modal-title" class="text-3xl font-bold text-gray-800 mb-2 font-serif"></h3>
-                <p id="modal-desc" class="text-gray-600 leading-relaxed mb-6"></p>
-                
-                <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
-                    <h5 class="font-bold text-sm text-gray-800 mb-3 flex items-center gap-2">
-                        <span>✨</span> 교육 및 치유 효과
-                    </h5>
-                    <p id="modal-effect" class="text-sm text-gray-600 leading-relaxed"></p>
-                </div>
-
-                <div class="mt-8 flex gap-3">
-                    <button onclick="closeModal()" class="flex-1 py-3 rounded-xl border border-gray-300 font-bold hover:bg-gray-50">닫기</button>
-                </div>
+            <div class="flex flex-col gap-3">
+                <button onclick="window.location.href='tel:01086808101'" class="w-full py-5 bg-lime-600 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-lime-700 transition font-black">사무장님께 전화 걸기</button>
+                <button onclick="window.location.href='sms:01086808101?body=[에코왕곡] 제안서 보고 연락드렸습니다. 원명 및 인원:'" class="w-full py-5 bg-stone-800 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-stone-900 transition font-black">문의 문자 남기기</button>
+                <button onclick="closeModal()" class="w-full py-4 text-stone-400 font-bold text-center font-black">창 닫기</button>
             </div>
         </div>
     </div>
 
-    <!-- 스크립트 -->
     <script>
-        const inputs = document.querySelectorAll('input[name="course"], #headcount');
-        const totalEl = document.getElementById('total-cost');
-        const annualEl = document.getElementById('annual-cost');
-        const specialNote = document.getElementById('special-note');
-        const annualRow = annualEl.parentElement;
+        const curriculum = [
+            { m: 3, season: 'spring', theme: '우리 원과 친구', title: '🌱커피박 반려식물심기', img: 'photo3.jpg', p: '흙과 커피 가루의 촉감 놀이', e: '커피박 화분 자원순환 탐구', c: '단짝 식물 친구 직접 고르기', comp: '나만의 그림 화분 완성' },
+            { m: 4, season: 'spring', theme: '봄꽃과 향기', title: '🌸봄을담은 감성디퓨저', img: 'photo4.jpg', p: '마당 꽃 향기 따라 숨바꼭질', e: '보존화의 색감과 결 관찰', c: '나만의 꽃 레이어드 선택', comp: '선물용 봄 디퓨저 완성' },
+            { m: 5, season: 'spring', theme: '나와 가족', title: '🌷감사가득 카네이션바구니', img: 'photo5.jpg', p: '대형 비눗방울과 신체 놀이', e: '카네이션 비누꽃 질감 탐색', c: '리본 및 꽃 색상 주도적 선택', comp: '감사 가득 바구니 완성' },
+            { m: 6, season: 'summer', theme: '도구와 목공', title: '🔨뚝딱뚝딱 원목건축놀이', img: 'photo6.jpg', p: '원목 자투리 쌓고 무너뜨리기', e: '나무의 결 사포질로 느껴보기', c: '최적의 나무 조각 직접 선택', comp: '꼬마 목수 수료 작품 완성' },
+            { m: 7, season: 'summer', theme: '여름과 물놀이', title: '🧅나주양파 천연손수건염색', img: 'photo7.jpg', p: '바스락 양파 껍질 소리 놀이', e: '염색 물의 신비로운 변화 관찰', c: '고무줄 무늬 위치 스스로 결정', comp: '황금빛 천연 손수건 완성' },
+            { m: 8, season: 'summer', theme: '건강과 여름', title: '🍧오감만족 과일컵빙수요리', img: 'photo8.jpg', p: '꽁꽁 얼음 속 보물 구출 작전', e: '얼음 입자와 과일 향 탐색', c: '나만의 토핑 레시피 구성', comp: '달콤 시원한 컵빙수 맛보기' },
+            { m: 9, season: 'autumn', theme: '전통과 추석', title: '🍡알록달록 캐릭터떡빚기', img: 'photo9.jpg', p: '대형 윷놀이와 투호 던지기', e: '천연 반죽의 말랑한 촉감 탐구', c: '만들고 싶은 캐릭터 직접 선택', comp: '정성을 담은 캐릭터 떡 완성' },
+            { m: 10, season: 'autumn', theme: '가을 열매와 감성', title: '💡가을압화 LED무드등', img: 'photo10.jpg', p: '바스락 낙엽 숲 산책과 탐험', e: '빛을 투과하는 자연물 관찰', c: '나만의 가을 조각들 배치', comp: '가을밤 감성 무드등 완성' },
+            { m: 11, season: 'autumn', theme: '우리 쌀과 농업', title: '🥢가래떡 초코퐁듀빼빼로', img: 'photo11.jpg', p: '가래떡 징검다리 건너기 놀이', e: '초콜릿의 온도별 성질 탐색', c: '알록달록 토핑 가루 직접 선택', comp: '건강한 우리 쌀 디저트 완성' },
+            { m: 12, season: 'winter', theme: '추억과 파티', title: '🎂메리에코 루돌프케이크', img: 'photo12.jpg', p: '솔방울 볼링 게임으로 대결', e: '부드러운 크림의 질감 탐색', c: '루돌프의 표정 주도적 결정', comp: '특별한 크리스마스 케이크' },
+            { m: 1, season: 'winter', theme: '새해와 전통', title: '🧧자개스티커 꽃거울꾸미기', img: 'photo1.jpg', p: '전통 팽이와 제기차기 시합', e: '오로라 빛 자개의 아름다움 관찰', c: '꽃잎 자개의 배치와 색상 결정', comp: '전통 자개 꽃 손거울 완성' },
+            { m: 2, season: 'winter', theme: '나의 성장', title: '🪵 안녕,나를닮은 나무인형', img: 'photo2.jpg', p: '나만의 단짝 나뭇가지 찾기', e: '나뭇가지에 나의 모습 투영하기', c: '인형의 머리카락과 옷감 선택', comp: '나를 닮은 나무친구 완성' }
+        ];
 
-        function calc() {
-            const count = document.getElementById('headcount').value;
-            const type = document.querySelector('input[name="course"]:checked').value;
-            let price = type === 'A' ? 25000 : (type === 'B' ? 40000 : 50000);
-            
-            const total = count * price;
-            totalEl.innerText = total.toLocaleString() + ' 원';
-            annualEl.innerText = (total * 12).toLocaleString() + ' 원';
-
-            if (type === 'C') {
-                annualRow.style.display = 'none';
-                specialNote.style.display = 'block';
-            } else {
-                annualRow.style.display = 'block';
-                specialNote.style.display = 'none';
-            }
-        }
-
-        inputs.forEach(i => i.addEventListener('input', calc));
-        calc();
-
-        const programData = {
-            1: { title: "1월: 커피박 키링", desc: "버려지는 커피 찌꺼기(커피박)를 활용해 나만의 귀여운 키링을 만듭니다. 반죽하고 모양을 찍어내는 촉감 활동을 통해 소근육을 자극합니다.", effect: "자원 순환의 의미를 배우고, 향긋한 커피 향을 맡으며 심리적 안정을 얻을 수 있습니다." },
-            2: { title: "2월: 복(福) 주머니", desc: "새해의 건강과 행운을 기원하며 전통 복주머니를 꾸밉니다. 몸에 좋은 견과류를 가득 채워 소중한 사람에게 선물할 수 있습니다.", effect: "전통 문화를 이해하고, 나눔의 기쁨을 통해 자존감을 높입니다." },
-            3: { title: "3월: 반려식물 입양", desc: "봄을 알리는 꽃과 식물을 화분에 직접 심고, '나만의 친구' 이름을 지어줍니다. 생명을 다루는 활동으로 책임감을 배웁니다.", effect: "흙을 만지는 촉감 활동은 정서적 안정과 우울감 해소에 탁월한 효과가 있습니다." },
-            4: { title: "4월: 봄 꽃떡 빚기", desc: "천연 재료로 색을 낸 쌀 반죽으로 알록달록한 꽃 모양 떡을 빚습니다. 눈과 손, 입이 모두 즐거운 오감 만족 요리 체험입니다.", effect: "손을 많이 사용하는 조작 활동으로 뇌 기능을 활성화하고 성취감을 줍니다." },
-            5: { title: "5월: 감사 바구니", desc: "가정의 달을 맞아 비누꽃과 허브를 활용해 아름다운 꽃바구니를 만듭니다. 감사 편지를 함께 써서 마음을 전합니다.", effect: "타인에 대한 고마움을 표현하며 사회성을 기르고 긍정적인 관계를 형성합니다." },
-            6: { title: "6월: 이끼 테라리움", desc: "투명한 유리병 속에 작은 돌과 이끼를 배치하여 나만의 작은 숲을 꾸밉니다. 습도 조절 효과가 있는 천연 가습기입니다.", effect: "초록색 식물을 가까이하며 눈의 피로를 풀고 심리적 편안함을 느낍니다." },
-            7: { title: "7월: 양파껍질 염색", desc: "버려지는 양파 껍질을 끓여 얻은 황금빛 물로 손수건을 염색합니다. 우연히 만들어지는 무늬의 아름다움을 발견합니다.", effect: "자연 색감의 따뜻함을 느끼며 예술적 감수성과 창의력을 키웁니다." },
-            8: { title: "8월: 과일 컵빙수", desc: "무더운 여름, 시원한 얼음을 갈고 제철 과일과 팥을 올려 나만의 빙수를 만듭니다. 직접 만든 간식을 나누어 먹습니다.", effect: "더위를 식히며 스트레스를 해소하고, 요리 과정을 통해 순서와 규칙을 익힙니다." },
-            9: { title: "9월: 압화 무드등", desc: "잘 말린 가을 꽃잎(압화)을 붙여 은은하게 빛나는 무드등을 만듭니다. 가을 밤을 따뜻하게 밝혀줄 인테리어 소품입니다.", effect: "섬세한 작업으로 집중력을 높이고, 빛을 통해 심리적 안정감을 얻습니다." },
-            10: { title: "10월: 우드 트레이", desc: "거친 나무 표면을 사포로 문질러 부드럽게 만들고, 천연 오일을 발라 완성합니다. 나무의 결을 느끼는 힐링 목공입니다.", effect: "반복적인 사포질 활동은 잡념을 없애고 마음을 차분하게 가라앉히는 명상 효과가 있습니다." },
-            11: { title: "11월: 가래떡 빼빼로", desc: "우리 쌀로 만든 쫄깃한 가래떡에 초콜릿과 토핑을 입혀 건강한 빼빼로를 만듭니다. 농업인의 날(11월 11일)의 의미도 배웁니다.", effect: "우리 농산물의 소중함을 알고, 퓨전 요리를 통해 창의적인 사고를 확장합니다." },
-            12: { title: "12월: 트리 케이크", desc: "카스테라와 생크림, 딸기를 쌓아 올려 크리스마스 트리 모양의 케이크를 만듭니다. 한 해를 마무리하는 달콤한 파티입니다.", effect: "특별한 날을 기념하며 즐거운 추억을 만들고, 긍정적인 정서를 함양합니다." },
-            'S1': { title: "에코 정원 소풍", desc: "탁 트인 1,000평 정원을 배경으로 펼쳐지는 미션 보물찾기와 여유로운 산책 프로그램입니다. 활동 후에는 카페 정원에서 나주 로컬푸드로 차려진 건강한 브런치 뷔페를 즐깁니다.", effect: "자연 속에서의 신체 활동으로 활력을 되찾고, 건강한 먹거리로 몸과 마음을 채웁니다." },
-            'S2': { title: "프리미엄 힐링 소풍", desc: "식사를 마친 후, 자리를 옮기는 번거로움 없이 그 자리에서 이어지는 고품격 힐링 타임입니다. 전문 강사가 배합한 천연 아로마 오일로 손의 피로를 푸는 '핸드케어'와, 계절의 향기를 담은 따뜻한 '꽃차 티테라피'가 코스로 제공됩니다.", effect: "식곤증을 예방하고, 아로마 향기를 통한 심리적 이완과 혈액 순환 촉진 효과가 탁월합니다." }
+        const schedData = {
+            basic: [{t:"10:30",a:"도착 및 오리엔테이션",d:"반가워요 에코왕곡! 안전 약속 및 화장실 이용"},{t:"10:50",a:"경험 1차: 놀이와 탐색",d:"주제별 자연물과 교감하며 호기심 깨우기"},{t:"11:40",a:"경험 2차: 선택과 완성",d:"나만의 주도적 작품 완성 및 성취감 느끼기"},{t:"12:30",a:"점심 식사 (건강 식단)",d:"나주 친환경 식재료로 만든 맛있는 점심"},{t:"14:00",a:"마당 비눗방울 및 귀가",d:"추억을 가득 담아 안전하게 배웅"}],
+            sports: [{t:"10:30",a:"개회식 및 몸풀기 율동",d:"대표님 직접 진행: 온 가족이 하나 되는 시작"},{t:"11:00",a:"명랑 운동회 메인 게임",d:"지구를 굴려라, 색판 뒤집기 등 협동 활동"},{t:"12:00",a:"가족 점심 식사 & 휴식",d:"잔디밭 위에서 즐기는 맛있는 소풍 시간"},{t:"13:00",a:"보물찾기 & 포토타임",d:"마을 곳곳 보물 찾기와 가족 인생샷 남기기"},{t:"14:30",a:"폐회식 및 귀가",d:"기념 선물 증정 및 안전한 배웅"}],
+            grad: [{t:"16:00",a:"도착 및 숙소 배정",d:"따뜻한 온돌 숙소 배정 및 안전 교육"},{t:"18:30",a:"저녁 식사 (BBQ/수육)",d:"친구들과 함께 먹는 꿀맛 같은 저녁 파티"},{t:"19:30",a:"LED 불멍 & 촛불 의식",d:"대표님 진행: 고마운 마음을 전하는 감동의 밤"},{t:"21:00",a:"취침 준비",d:"꿈나라로 여행 떠나기"},{t:"08:30",a:"조식 및 귀가 준비",d:"든든한 아침 먹고 추억 가득 담아 귀가"}]
         };
 
-        function openModal(id) {
-            const data = programData[id];
-            if (!data) return;
-
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-desc').innerText = data.desc;
-            document.getElementById('modal-effect').innerText = data.effect;
-            
-            const cardImgSrc = document.getElementById('img-' + id).src;
-            document.getElementById('modal-img').src = cardImgSrc;
-
-            document.getElementById('modal-overlay').classList.remove('hidden');
+        function scrollToId(id) { const el = document.getElementById(id); if(el) el.scrollIntoView({ behavior: 'smooth' }); }
+        function showModal() { document.getElementById('reservation-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('reservation-modal').style.display = 'none'; }
+        
+        function switchSchedule(type) {
+            const container = document.getElementById('schedule-content'); container.innerHTML = '';
+            ['basic','sports','grad'].forEach(t => { const btn = document.getElementById(`s-btn-${t}`); if(btn) btn.className = (t === type) ? "schedule-tab-active px-8 py-3 rounded-full text-sm font-black transition-soft shadow-md font-black text-center" : "bg-stone-100 text-stone-500 px-8 py-3 rounded-full text-sm font-black hover:bg-stone-200 transition-soft font-bold text-center"; });
+            schedData[type].forEach(s => { container.innerHTML += `
+                <div class="relative pl-10 timeline-item group text-left">
+                    <div class="absolute left-0 top-1 w-10 h-10 rounded-full bg-white border-2 border-stone-200 flex items-center justify-center z-10 group-hover:border-lime-500 transition-colors duration-300 text-left">
+                        <span class="w-2.5 h-2.5 rounded-full bg-stone-200 group-hover:bg-lime-600"></span>
+                    </div>
+                    <div class="text-left text-left">
+                        <div class="inline-block px-3 py-1 rounded-lg bg-lime-50 text-lime-700 text-[10px] font-black uppercase mb-2 font-black text-left">${s.t}</div>
+                        <h4 class="font-black text-stone-800 text-lg mb-1 group-hover:text-lime-700 transition-colors font-black text-left">${s.a}</h4>
+                        <p class="text-sm text-stone-500 font-bold leading-relaxed font-bold text-left">${s.d}</p>
+                    </div>
+                </div>`; });
         }
 
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.add('hidden');
+        function updateFilter(season) {
+            const grid = document.getElementById('curriculum-grid'); grid.innerHTML = '';
+            ['all', 'spring', 'summer', 'autumn', 'winter'].forEach(s => { const btn = document.getElementById(`f-${s}`); if(btn) btn.className = (s === season) ? "px-5 py-2 rounded-xl text-xs font-black transition-soft bg-white shadow-sm text-lime-800 font-black font-black" : "px-5 py-2 rounded-xl text-xs transition-soft text-stone-500 hover:bg-white/50 font-bold font-bold"; });
+            const filtered = season === 'all' ? curriculum : curriculum.filter(d => d.season === season);
+            filtered.forEach(item => { grid.innerHTML += `<div class="bg-white rounded-[56px] overflow-hidden shadow-sm border border-stone-200 flex flex-col md:flex-row transition-soft hover:shadow-2xl group animate-in h-full"><div class="md:w-2/5 h-64 md:h-auto relative overflow-hidden bg-stone-100"><img src="${item.img}" class="w-full h-full object-cover transition-soft group-hover:scale-110 duration-1000" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540324155974-7523202daa3f?auto=format&fit=crop&w=600&q=80';" /><div class="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl text-[12px] font-black text-stone-800 shadow-sm text-center font-black font-black font-black">${item.m}월</div></div><div class="p-10 md:w-3/5 text-left text-left text-left"><p class="text-[11px] font-black text-orange-600 uppercase tracking-widest mb-2 text-left font-black font-black font-black">${item.theme}</p><h3 class="font-black text-stone-900 mb-6 tracking-tight text-left single-line-title text-center font-black font-black font-black text-left font-black font-black font-black">${item.title}</h3><div class="space-y-4 text-left text-left text-left"><p class="text-xs text-stone-500 font-bold text-left font-bold font-bold font-black"><span class="text-lime-700 font-black mr-2 text-left font-black font-black font-black font-black">Play.</span> ${item.p}</p><p class="text-xs text-stone-500 font-bold text-left font-bold font-bold font-bold font-black text-left font-black font-black"><span class="text-orange-600 font-black mr-2 text-left font-black font-black font-black font-black">Explore.</span> ${item.e}</p><p class="text-xs text-stone-500 font-bold text-left font-bold font-bold font-bold font-black text-left font-black font-black"><span class="text-blue-600 font-black mr-2 text-left font-black font-black font-black font-black">Choose.</span> ${item.c}</p><p class="text-xs text-stone-800 font-black text-left font-black italic text-left font-black font-black text-left font-black font-black font-black font-black"><span class="mr-2 text-left font-black font-black font-black text-lime-700 text-left">✨</span> ${item.comp}</p></div></div></div>`; });
         }
 
-        document.getElementById('modal-overlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
+        function calculate() { const childCnt = parseInt(document.getElementById('in-child').value) || 0; const hasMeal = document.getElementById('in-meal').checked; const total = (childCnt * 15000) + (hasMeal ? childCnt * 8000 : 0); document.getElementById('total-price').textContent = total.toLocaleString() + '원'; }
+        
+        window.onload = () => { 
+            updateFilter('all'); switchSchedule('basic'); calculate(); 
+            document.getElementById('in-child').addEventListener('input', calculate); 
+            document.getElementById('in-meal').addEventListener('change', calculate); 
+        };
     </script>
 </body>
 </html>
